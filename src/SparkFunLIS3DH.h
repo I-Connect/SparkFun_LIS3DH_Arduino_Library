@@ -98,6 +98,8 @@ public:
 	uint8_t yAccelEnabled;
 	uint8_t zAccelEnabled;
 	
+	uint8_t lowPower;
+
 	//Fifo settings
 	uint8_t fifoEnabled;
 	uint8_t fifoMode; //can be 0x0,0x1,0x2,0x3

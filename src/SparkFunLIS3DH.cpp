@@ -58,6 +58,7 @@ LIS3DHCore::LIS3DHCore( uint8_t busType, uint8_t inputArg ) : commInterface(I2C_
 	if( commInterface == I2C_MODE )
 	{
 		I2CAddress = inputArg;
+		log_i("LIS3DH I2C address: %x", I2CAddress);
 	}
 	if( commInterface == SPI_MODE )
 	{
@@ -238,7 +239,7 @@ status_t LIS3DHCore::readRegisterRegion(uint8_t *outputPointer , uint8_t offset,
 //****************************************************************************//
 status_t LIS3DHCore::readRegister(uint8_t* outputPointer, uint8_t offset) {
 	//Return value
-	uint8_t result;
+	uint8_t result = NULL;
 	uint8_t numBytes = 1;
 	status_t returnError = IMU_SUCCESS;
 
@@ -373,6 +374,8 @@ LIS3DH::LIS3DH( uint8_t busType, uint8_t inputArg ) : LIS3DHCore( busType, input
 	settings.yAccelEnabled = 1;
 	settings.zAccelEnabled = 1;
 
+	settings.lowPower = 0;
+
 	//FIFO control settings
 	settings.fifoEnabled = 0;
 	settings.fifoThreshold = 20;  //Can be 0 to 32
@@ -428,6 +431,9 @@ void LIS3DH::applySettings( void )
 	//  Convert ODR
 	switch(settings.accelSampleRate)
 	{
+		case 0:
+		dataToWrite |= (0x00 << 4);
+		break;
 		case 1:
 		dataToWrite |= (0x01 << 4);
 		break;
@@ -458,6 +464,8 @@ void LIS3DH::applySettings( void )
 		break;
 	}
 	
+	dataToWrite |= (settings.lowPower & 0x01) << 3;
+
 	dataToWrite |= (settings.zAccelEnabled & 0x01) << 2;
 	dataToWrite |= (settings.yAccelEnabled & 0x01) << 1;
 	dataToWrite |= (settings.xAccelEnabled & 0x01);
