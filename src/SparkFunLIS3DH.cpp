@@ -58,7 +58,8 @@ LIS3DHCore::LIS3DHCore( uint8_t busType, uint8_t inputArg ) : commInterface(I2C_
 	if( commInterface == I2C_MODE )
 	{
 		I2CAddress = inputArg;
-		log_i("LIS3DH I2C address: %x", I2CAddress);
+		Serial.print("LIS3DH I2C address: ");
+		Serial.println(I2CAddress, HEX);
 	}
 	if( commInterface == SPI_MODE )
 	{
