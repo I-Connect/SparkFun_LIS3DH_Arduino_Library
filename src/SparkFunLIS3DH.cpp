@@ -58,8 +58,14 @@ LIS3DHCore::LIS3DHCore( uint8_t busType, uint8_t inputArg ) : commInterface(I2C_
 	if( commInterface == I2C_MODE )
 	{
 		I2CAddress = inputArg;
-		Serial.print("LIS3DH I2C address: ");
-		Serial.println(I2CAddress, HEX);
+		#ifdef ESP32
+		  log_i("LIS3DH I2C address: ");
+		  log_i(I2CAddress, HEX);
+		#else
+		  Serial.print("LIS3DH I2C address: ");
+		  Serial.println(I2CAddress, HEX);
+		#endif
+		
 	}
 	if( commInterface == SPI_MODE )
 	{
@@ -422,8 +428,13 @@ void LIS3DH::applySettings( void )
 	dataToWrite = ((settings.tempEnabled & 0x01) << 6) | ((settings.adcEnabled & 0x01) << 7);
 	//Now, write the patched together data
 #ifdef VERBOSE_SERIAL
-	Serial.print("LIS3DH_TEMP_CFG_REG: 0x");
-	Serial.println(dataToWrite, HEX);
+	#ifdef ESP32
+	  log_i("LIS3DH_TEMP_CFG_REG: 0x");
+	  log_i(dataToWrite, HEX);
+	#else
+	  Serial.print("LIS3DH_TEMP_CFG_REG: 0x");
+	  Serial.println(dataToWrite, HEX);
+	#Eendif
 #endif
 	writeRegister(LIS3DH_TEMP_CFG_REG, dataToWrite);
 	
@@ -472,8 +483,13 @@ void LIS3DH::applySettings( void )
 	dataToWrite |= (settings.xAccelEnabled & 0x01);
 	//Now, write the patched together data
 #ifdef VERBOSE_SERIAL
-	Serial.print("LIS3DH_CTRL_REG1: 0x");
-	Serial.println(dataToWrite, HEX);
+	#ifdef ESP32
+	  log_i("LIS3DH_CTRL_REG1: 0x");
+	  log_i(dataToWrite, HEX);
+	#else
+	  Serial.print("LIS3DH_CTRL_REG1: 0x");
+	  Serial.println(dataToWrite, HEX);
+	#endif
 #endif
 	writeRegister(LIS3DH_CTRL_REG1, dataToWrite);
 
@@ -499,8 +515,13 @@ void LIS3DH::applySettings( void )
 	dataToWrite |= 0x80; //set block update
 	dataToWrite |= 0x08; //set high resolution
 #ifdef VERBOSE_SERIAL
-	Serial.print("LIS3DH_CTRL_REG4: 0x");
-	Serial.println(dataToWrite, HEX);
+	#ifdef ESP32
+	  log_i("LIS3DH_CTRL_REG4: 0x");
+	  log_i(dataToWrite, HEX);
+	#else
+	  Serial.print("LIS3DH_CTRL_REG4: 0x");
+	  Serial.println(dataToWrite, HEX);
+	#endif
 #endif
 	//Now, write the patched together data
 	writeRegister(LIS3DH_CTRL_REG4, dataToWrite);
@@ -658,8 +679,13 @@ void LIS3DH::fifoBegin( void )
 	dataToWrite |= (settings.fifoThreshold & 0x1F); //apply threshold
 	//Now, write the patched together data
 #ifdef VERBOSE_SERIAL
-	Serial.print("LIS3DH_FIFO_CTRL_REG: 0x");
-	Serial.println(dataToWrite, HEX);
+	#ifdef ESP32
+	  log_i("LIS3DH_FIFO_CTRL_REG: 0x");
+	  log_i(dataToWrite, HEX);
+	#else
+	  Serial.print("LIS3DH_FIFO_CTRL_REG: 0x");
+	  Serial.println(dataToWrite, HEX);
+	#endif
 #endif
 	writeRegister(LIS3DH_FIFO_CTRL_REG, dataToWrite);
 
@@ -669,8 +695,13 @@ void LIS3DH::fifoBegin( void )
 	dataToWrite |= (settings.fifoEnabled & 0x01) << 6;
 	//Now, write the patched together data
 #ifdef VERBOSE_SERIAL
-	Serial.print("LIS3DH_CTRL_REG5: 0x");
-	Serial.println(dataToWrite, HEX);
+	#ifdef ESP32
+	  log_i("LIS3DH_CTRL_REG5: 0x");
+	  log_i(dataToWrite, HEX);
+	#else
+	  Serial.print("LIS3DH_CTRL_REG5: 0x");
+	  Serial.println(dataToWrite, HEX);
+	#endif
 #endif
 	writeRegister(LIS3DH_CTRL_REG5, dataToWrite);
 }
@@ -692,8 +723,13 @@ void LIS3DH::fifoStartRec( void )
 	readRegister( &dataToWrite, LIS3DH_FIFO_CTRL_REG ); //Start with existing data
 	dataToWrite &= 0x3F;//clear mode
 #ifdef VERBOSE_SERIAL
-	Serial.print("LIS3DH_FIFO_CTRL_REG: 0x");
-	Serial.println(dataToWrite, HEX);
+	#ifdef ESP32
+	  log_i("LIS3DH_CTRL_REG5: 0x");
+	  log_i(dataToWrite, HEX);
+	#else
+	  Serial.print("LIS3DH_FIFO_CTRL_REG: 0x");
+	  Serial.println(dataToWrite, HEX);
+	#endif
 #endif
 	writeRegister(LIS3DH_FIFO_CTRL_REG, dataToWrite);	
 	//  ... then back on again
@@ -702,8 +738,13 @@ void LIS3DH::fifoStartRec( void )
 	dataToWrite |= (settings.fifoMode & 0x03) << 6; //apply mode
 	//Now, write the patched together data
 #ifdef VERBOSE_SERIAL
-	Serial.print("LIS3DH_FIFO_CTRL_REG: 0x");
-	Serial.println(dataToWrite, HEX);
+	#ifdef ESP32
+	  log_i("LIS3DH_FIFO_CTRL_REG: 0x");
+	  log_i(dataToWrite, HEX);
+	#else
+	  Serial.print("LIS3DH_FIFO_CTRL_REG: 0x");
+	  Serial.println(dataToWrite, HEX);
+	#endif
 #endif
 	writeRegister(LIS3DH_FIFO_CTRL_REG, dataToWrite);
 }
@@ -714,8 +755,13 @@ uint8_t LIS3DH::fifoGetStatus( void )
 	uint8_t tempReadByte = 0;
 	readRegister(&tempReadByte, LIS3DH_FIFO_SRC_REG);
 #ifdef VERBOSE_SERIAL
-	Serial.print("LIS3DH_FIFO_SRC_REG: 0x");
-	Serial.println(tempReadByte, HEX);
+	#ifdef ESP32
+	  log_i("LIS3DH_FIFO_SRC_REG: 0x");
+	  log_i(dataToWrite, HEX);
+	#else
+	  Serial.print("LIS3DH_FIFO_SRC_REG: 0x");
+	  Serial.println(tempReadByte, HEX);
+	#endif
 #endif
 	return tempReadByte;  
 }
@@ -728,8 +774,13 @@ void LIS3DH::fifoEnd( void )
 	readRegister( &dataToWrite, LIS3DH_FIFO_CTRL_REG ); //Start with existing data
 	dataToWrite &= 0x3F;//clear mode
 #ifdef VERBOSE_SERIAL
-	Serial.print("LIS3DH_FIFO_CTRL_REG: 0x");
-	Serial.println(dataToWrite, HEX);
+	#ifdef ESP32
+	  log_i("LIS3DH_FIFO_CTRL_REG: 0x");
+	  log_i(dataToWrite, HEX);
+	#else
+	  Serial.print("LIS3DH_FIFO_CTRL_REG: 0x");
+	 Serial.println(dataToWrite, HEX);
+	#endif
 #endif
 	writeRegister(LIS3DH_FIFO_CTRL_REG, dataToWrite);	
 }
