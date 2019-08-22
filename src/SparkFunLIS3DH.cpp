@@ -434,7 +434,7 @@ void LIS3DH::applySettings( void )
 	#else
 	  Serial.print("LIS3DH_TEMP_CFG_REG: 0x");
 	  Serial.println(dataToWrite, HEX);
-	#Eendif
+	#endif
 #endif
 	writeRegister(LIS3DH_TEMP_CFG_REG, dataToWrite);
 	
